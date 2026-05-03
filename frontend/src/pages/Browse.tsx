@@ -8,7 +8,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Building2, Search, SlidersHorizontal } from "lucide-react";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { ListingCard, ListingCardSkeleton } from "../components/ListingCard";
 import { useBrowseListings } from "../hooks/useBackend";
 import type { BrowseFilter } from "../types";
@@ -35,7 +35,15 @@ export default function Browse() {
     category: categoryValue !== "all" ? (categoryValue as Category) : undefined,
   };
 
-  const { data: listings, isLoading, isError } = useBrowseListings(filter);
+  const { data: rawListings, isLoading, isError } = useBrowseListings(filter);
+
+  // Only show rental-type listings (house, flat, hotel, convention_hall).
+  // Services, marketplace, and roommate listings have their own dedicated pages.
+  const listings = useMemo(() => {
+    if (!rawListings) return rawListings;
+    const rentalSet = new Set<string>(BROWSE_CATEGORIES);
+    return rawListings.filter((l) => rentalSet.has(l.category));
+  }, [rawListings]);
 
   const hasActiveFilters =
     locationInput.trim() !== "" || categoryValue !== "all";

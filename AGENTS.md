@@ -6,12 +6,12 @@
 
 ## Verified Commands
 
-**Frontend** (run from `src/frontend/`):
+**Frontend** (run from `frontend/`):
 
-- **install**: `pnpm install --prefer-offline`
-- **typecheck**: `pnpm typecheck`
+- **install**: `pnpm install --prefer-offline` (or `npm install`)
+- **typecheck**: `pnpm typecheck` (or `npx tsc --noEmit`)
 - **lint fix**: `pnpm fix`
-- **build**: `pnpm build`
+- **build**: `pnpm build` (or `npm run build`)
 
 **Backend** (run from `java-backend/`):
 

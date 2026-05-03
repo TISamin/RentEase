@@ -1,12 +1,15 @@
 {
-  "overview": "A property rental and listing platform where users can post and browse vacancies across five categories (flat, hotel, house, convention hall, shifting service), with multiple image uploads, flexible location search, and user authentication.",
+  "overview": "RentEase — a property rental and services platform where users can post and browse listings across multiple categories including rentals (flat, hotel, house, convention hall), a marketplace for buying/selling, service providers (shifting, event planning, decoration, maintenance, cleaning, catering), and a roommate finder. Features multiple image uploads, location search, OTP-based authentication, and a Spring Boot REST API backend.",
   "features": [
-    "User authentication with session persistence",
+    "OTP-based user authentication with password setup",
     "Editable user profile (name, address, email, phone)",
-    "Post vacancy listings with multiple image uploads",
-    "Five listing categories: flat, hotel, house, convention hall, shifting service",
-    "Browse and search listings by category and location text",
+    "Post listings with multiple image uploads across all categories",
+    "Browse Rentals: flats, hotels, houses, convention halls",
+    "Marketplace for buying and selling items",
+    "Services directory: shifting, event planning, decoration, maintenance, cleaning, catering",
+    "Roommate Finder for shared living matches",
     "Full listing detail view with image gallery",
+    "Location-based search and category filtering",
     "Mobile-responsive and accessible UI"
   ],
   "category": "productivity",
@@ -15,8 +18,11 @@
     "listings",
     "property",
     "real-estate",
+    "services",
+    "marketplace",
+    "roommate",
     "search",
     "image-upload"
   ],
-  "last_updated": "2026-04-29T07:54:45.243Z"
+  "last_updated": "2026-05-03T05:20:00.000Z"
 }
