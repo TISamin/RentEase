@@ -279,6 +279,41 @@ export default function ListingDetail() {
                 {listing.description}
               </p>
             </div>
+
+            {/* Current Roommates */}
+            {parsedMetadata?.currentRoommates && parsedMetadata.currentRoommates.length > 0 && (
+              <div className="pt-6 border-t border-border mt-2">
+                <h2 className="font-display font-semibold text-foreground text-lg mb-4 flex items-center gap-2">
+                  <Users className="h-5 w-5 text-muted-foreground" />
+                  Meet the Current Roommates
+                </h2>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  {parsedMetadata.currentRoommates.map((rm: any, idx: number) => (
+                    <Card key={idx} className="overflow-hidden border border-border shadow-sm">
+                      <div className="flex flex-row items-center p-4 gap-4 bg-muted/20">
+                        {rm.photoData ? (
+                          <div className="h-16 w-16 rounded-full overflow-hidden border-2 border-background shadow-sm shrink-0">
+                            <img src={rm.photoData} alt={rm.name} className="h-full w-full object-cover" />
+                          </div>
+                        ) : (
+                          <div className="h-16 w-16 rounded-full bg-muted flex items-center justify-center border-2 border-background shadow-sm shrink-0">
+                            <Users className="h-8 w-8 text-muted-foreground/50" />
+                          </div>
+                        )}
+                        <div className="flex-1 min-w-0">
+                          <h3 className="font-semibold text-foreground truncate">{rm.name}</h3>
+                        </div>
+                      </div>
+                      <CardContent className="p-4 pt-3 border-t border-border/50">
+                        <p className="text-sm text-foreground/80 leading-relaxed whitespace-pre-line">
+                          {rm.description}
+                        </p>
+                      </CardContent>
+                    </Card>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
 
           {/* Right: info card */}

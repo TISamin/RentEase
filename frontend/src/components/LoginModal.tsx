@@ -19,7 +19,7 @@ export function LoginModal() {
   
   const isLoading = useAuthStore((s) => s.isLoading);
 
-  const [mode, setMode] = useState<"login" | "signup">("login");
+  const [mode, setMode] = useState<"login" | "signup" | "forgot_password">("login");
   const [signupStep, setSignupStep] = useState<"email" | "otp" | "password">("email");
   
   const [email, setEmail] = useState("");
@@ -74,10 +74,10 @@ export function LoginModal() {
     
     const success = await setPassword(email, password);
     if (success) {
-      toast.success("Signup complete! You are now logged in.");
+      toast.success(mode === "forgot_password" ? "Password reset successfully! You are now logged in." : "Signup complete! You are now logged in.");
       resetState();
     } else {
-      toast.error("Failed to complete signup.");
+      toast.error(mode === "forgot_password" ? "Failed to reset password." : "Failed to complete signup.");
     }
   };
 
@@ -108,20 +108,32 @@ export function LoginModal() {
           <DialogTitle className="text-xl font-display">
             {mode === "login" 
               ? "Welcome Back" 
-              : signupStep === "email" 
-                ? "Create an Account" 
-                : signupStep === "otp" 
-                  ? "Verify Email" 
-                  : "Set a Password"}
+              : mode === "forgot_password"
+                ? signupStep === "email" 
+                  ? "Reset Password" 
+                  : signupStep === "otp" 
+                    ? "Verify Email" 
+                    : "Set New Password"
+                : signupStep === "email" 
+                  ? "Create an Account" 
+                  : signupStep === "otp" 
+                    ? "Verify Email" 
+                    : "Set a Password"}
           </DialogTitle>
           <DialogDescription>
             {mode === "login"
               ? "Enter your email and password to log in."
-              : signupStep === "email"
-                ? "We'll send you a verification code to get started."
-                : signupStep === "otp"
-                  ? `We sent a 6-digit code to ${email}`
-                  : "Create a password to complete your account."}
+              : mode === "forgot_password"
+                ? signupStep === "email"
+                  ? "Enter your email and we'll send you a code to reset your password."
+                  : signupStep === "otp"
+                    ? `We sent a 6-digit code to ${email}`
+                    : "Create a new password for your account."
+                : signupStep === "email"
+                  ? "We'll send you a verification code to get started."
+                  : signupStep === "otp"
+                    ? `We sent a 6-digit code to ${email}`
+                    : "Create a password to complete your account."}
           </DialogDescription>
         </DialogHeader>
 
@@ -139,7 +151,16 @@ export function LoginModal() {
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="login-password">Password</Label>
+              <div className="flex items-center justify-between">
+                <Label htmlFor="login-password">Password</Label>
+                <button
+                  type="button"
+                  onClick={() => { setMode("forgot_password"); setSignupStep("email"); setPasswordState(""); }}
+                  className="text-xs text-primary hover:underline font-medium focus:outline-none"
+                >
+                  Forgot password?
+                </button>
+              </div>
               <Input
                 id="login-password"
                 type="password"
@@ -228,14 +249,16 @@ export function LoginModal() {
                   />
                 </div>
                 <Button type="submit" className="w-full" disabled={isLoading || password.length < 6}>
-                  {isLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : "Complete Signup"}
+                  {isLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : mode === "forgot_password" ? "Reset Password" : "Complete Signup"}
                 </Button>
               </form>
             )}
 
             {signupStep === "email" && (
               <div className="text-center mt-6">
-                <span className="text-sm text-muted-foreground">Already have an account? </span>
+                <span className="text-sm text-muted-foreground">
+                  {mode === "forgot_password" ? "Remember your password? " : "Already have an account? "}
+                </span>
                 <button 
                   type="button" 
                   onClick={() => setMode("login")}

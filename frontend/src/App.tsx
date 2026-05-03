@@ -31,13 +31,49 @@ function ProtectedRoute({ children }: { children: React.ReactNode }) {
 
 // Root layout route
 const rootRoute = createRootRoute({
-  component: () => (
-    <Layout>
-      <Suspense fallback={<LoadingPage />}>
-        <Outlet />
-      </Suspense>
-    </Layout>
-  ),
+  component: () => {
+    const { isAuthenticated, isLoading, login } = useAuth();
+
+    if (isLoading) {
+      return (
+        <Layout>
+          <LoadingPage />
+        </Layout>
+      );
+    }
+
+    if (!isAuthenticated) {
+      return (
+        <Layout>
+          <div className="flex flex-col items-center justify-center min-h-[60vh] text-center px-4">
+            <div className="bg-card p-8 rounded-xl shadow-sm border border-border max-w-md w-full animate-in fade-in zoom-in duration-300">
+              <div className="flex h-12 w-12 items-center justify-center rounded-full bg-primary/10 mx-auto mb-4">
+                <span className="text-primary font-display font-bold text-xl">R</span>
+              </div>
+              <h2 className="text-2xl font-display font-bold mb-2">Welcome to RentEase</h2>
+              <p className="text-muted-foreground mb-6">
+                Please log in or create an account to access the platform.
+              </p>
+              <button 
+                onClick={login}
+                className="w-full bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2 rounded-md font-medium transition-colors"
+              >
+                Log In / Sign Up
+              </button>
+            </div>
+          </div>
+        </Layout>
+      );
+    }
+
+    return (
+      <Layout>
+        <Suspense fallback={<LoadingPage />}>
+          <Outlet />
+        </Suspense>
+      </Layout>
+    );
+  },
 });
 
 // Routes

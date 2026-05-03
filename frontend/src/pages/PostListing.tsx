@@ -99,8 +99,15 @@ export default function PostListing() {
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [isUploadingAny, setIsUploadingAny] = useState(false);
   
+  interface RoommateProfile {
+    id: string;
+    name: string;
+    description: string;
+    photoData: string;
+  }
+  
   const [roommatesNeeded, setRoommatesNeeded] = useState("1");
-  const [roommatesGot, setRoommatesGot] = useState("0");
+  const [currentRoommates, setCurrentRoommates] = useState<RoommateProfile[]>([]);
 
   const isRoommateFinder = category === Category.roommate_finder;
   const nameLabel = isRoommateFinder ? "Headline" : "Listing Name";
@@ -115,6 +122,13 @@ export default function PostListing() {
       e.contactPhone = "Contact phone is required";
     } else if (!isValidPhone(contactPhone)) {
       e.contactPhone = "Enter a valid phone number (e.g. +880 1XXX-XXXXXX)";
+    }
+    if (isRoommateFinder) {
+      currentRoommates.forEach((rm, i) => {
+        if (!rm.name.trim()) e[`rm_name_${i}`] = "Name is required";
+        if (!rm.description.trim()) e[`rm_desc_${i}`] = "Description is required";
+        if (!rm.photoData) e[`rm_photo_${i}`] = "Photo is required";
+      });
     }
     setErrors(e);
     return Object.keys(e).length === 0;
@@ -227,7 +241,12 @@ export default function PostListing() {
     if (isRoommateFinder) {
       metadataObj = {
         roommatesNeeded: parseInt(roommatesNeeded) || 1,
-        roommatesGot: parseInt(roommatesGot) || 0,
+        roommatesGot: currentRoommates.length,
+        currentRoommates: currentRoommates.map((rm) => ({
+          name: rm.name.trim(),
+          description: rm.description.trim(),
+          photoData: rm.photoData,
+        })),
       };
     }
 
@@ -433,10 +452,12 @@ export default function PostListing() {
               </FieldWrapper>
 
               {isRoommateFinder && (
-                <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-4 border-t border-border pt-6 mt-2">
+                  <h3 className="font-display font-semibold text-lg text-foreground">Roommate Information</h3>
+                  
                   <FieldWrapper
                     id="roommates-needed"
-                    label="Roommates Needed"
+                    label="How many roommates are you looking for?"
                     required
                     icon={Users}
                   >
@@ -448,20 +469,166 @@ export default function PostListing() {
                       onChange={(e) => setRoommatesNeeded(e.target.value)}
                     />
                   </FieldWrapper>
-                  <FieldWrapper
-                    id="roommates-got"
-                    label="Current Roommates"
-                    required
-                    icon={Users}
-                  >
-                    <Input
-                      id="roommates-got"
-                      type="number"
-                      min="0"
-                      value={roommatesGot}
-                      onChange={(e) => setRoommatesGot(e.target.value)}
-                    />
-                  </FieldWrapper>
+
+                  <div className="space-y-4 pt-4">
+                    <div className="flex items-center justify-between">
+                      <Label className="flex items-center gap-1.5 font-medium">
+                        <Users className="h-3.5 w-3.5 text-muted-foreground" />
+                        Current Roommates Details
+                      </Label>
+                      <Button
+                        type="button"
+                        variant="outline"
+                        size="sm"
+                        onClick={() => setCurrentRoommates(prev => [
+                          ...prev, 
+                          { id: Math.random().toString(), name: "", description: "", photoData: "" }
+                        ])}
+                      >
+                        <PlusCircle className="h-4 w-4 mr-1.5" />
+                        Add Roommate
+                      </Button>
+                    </div>
+
+                    {currentRoommates.length === 0 ? (
+                      <p className="text-sm text-muted-foreground bg-muted/50 p-4 rounded-lg text-center border border-dashed border-border">
+                        No current roommates added. Click "Add Roommate" if you already have people living there to add their picture and description.
+                      </p>
+                    ) : (
+                      <div className="space-y-6">
+                        {currentRoommates.map((rm, idx) => (
+                          <Card key={rm.id} className="relative border border-border shadow-sm">
+                            <Button
+                              type="button"
+                              variant="ghost"
+                              size="icon"
+                              className="absolute right-2 top-2 h-8 w-8 text-muted-foreground hover:text-destructive"
+                              onClick={() => setCurrentRoommates(prev => prev.filter((_, i) => i !== idx))}
+                            >
+                              <X className="h-4 w-4" />
+                            </Button>
+                            <CardContent className="p-4 pt-8 space-y-4">
+                              <div className="flex flex-col sm:flex-row gap-5">
+                                <div className="flex-1 space-y-4">
+                                  <FieldWrapper
+                                    id={`rm-name-${idx}`}
+                                    label={`Roommate ${idx + 1} Name`}
+                                    required
+                                    error={errors[`rm_name_${idx}`]}
+                                    icon={Type}
+                                  >
+                                    <Input
+                                      id={`rm-name-${idx}`}
+                                      placeholder="e.g. John Doe"
+                                      value={rm.name}
+                                      onChange={(e) => {
+                                        const val = e.target.value;
+                                        setCurrentRoommates(prev => {
+                                          const next = [...prev];
+                                          next[idx].name = val;
+                                          return next;
+                                        });
+                                        if (errors[`rm_name_${idx}`]) clearFieldError(`rm_name_${idx}`);
+                                      }}
+                                    />
+                                  </FieldWrapper>
+
+                                  <FieldWrapper
+                                    id={`rm-desc-${idx}`}
+                                    label="Description & Habits"
+                                    required
+                                    error={errors[`rm_desc_${idx}`]}
+                                    icon={Type}
+                                  >
+                                    <Textarea
+                                      id={`rm-desc-${idx}`}
+                                      placeholder="e.g. Student, early bird, loves reading..."
+                                      value={rm.description}
+                                      onChange={(e) => {
+                                        const val = e.target.value;
+                                        setCurrentRoommates(prev => {
+                                          const next = [...prev];
+                                          next[idx].description = val;
+                                          return next;
+                                        });
+                                        if (errors[`rm_desc_${idx}`]) clearFieldError(`rm_desc_${idx}`);
+                                      }}
+                                      rows={2}
+                                      className="resize-none"
+                                    />
+                                  </FieldWrapper>
+                                </div>
+                                
+                                <div className="w-full sm:w-32 flex flex-col gap-2">
+                                  <Label className="text-xs font-medium">
+                                    Photo <span className="text-destructive">*</span>
+                                  </Label>
+                                  <div className="relative aspect-square rounded-md border-2 border-dashed border-border overflow-hidden bg-muted flex items-center justify-center group">
+                                    {rm.photoData ? (
+                                      <>
+                                        <img src={rm.photoData} alt={`Roommate ${idx + 1}`} className="w-full h-full object-cover" />
+                                        <label className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 flex items-center justify-center cursor-pointer transition-opacity">
+                                          <ImagePlus className="h-6 w-6 text-white" />
+                                          <input 
+                                            type="file" 
+                                            accept="image/*" 
+                                            className="sr-only" 
+                                            onChange={(e) => {
+                                              if (e.target.files?.[0]) {
+                                                const reader = new FileReader();
+                                                reader.onload = () => {
+                                                  const dataUrl = reader.result as string;
+                                                  setCurrentRoommates(prev => {
+                                                    const next = [...prev];
+                                                    next[idx].photoData = dataUrl;
+                                                    return next;
+                                                  });
+                                                  if (errors[`rm_photo_${idx}`]) clearFieldError(`rm_photo_${idx}`);
+                                                };
+                                                reader.readAsDataURL(e.target.files[0]);
+                                              }
+                                            }}
+                                          />
+                                        </label>
+                                      </>
+                                    ) : (
+                                      <label className="absolute inset-0 flex flex-col items-center justify-center cursor-pointer hover:bg-muted/80 transition-colors">
+                                        <ImagePlus className="h-6 w-6 text-muted-foreground mb-1" />
+                                        <span className="text-[10px] text-muted-foreground">Upload</span>
+                                        <input 
+                                          type="file" 
+                                          accept="image/*" 
+                                          className="sr-only" 
+                                          onChange={(e) => {
+                                            if (e.target.files?.[0]) {
+                                              const reader = new FileReader();
+                                              reader.onload = () => {
+                                                const dataUrl = reader.result as string;
+                                                setCurrentRoommates(prev => {
+                                                  const next = [...prev];
+                                                  next[idx].photoData = dataUrl;
+                                                  return next;
+                                                });
+                                                if (errors[`rm_photo_${idx}`]) clearFieldError(`rm_photo_${idx}`);
+                                              };
+                                              reader.readAsDataURL(e.target.files[0]);
+                                            }
+                                          }}
+                                        />
+                                      </label>
+                                    )}
+                                  </div>
+                                  {errors[`rm_photo_${idx}`] && (
+                                    <span className="text-[10px] text-destructive">{errors[`rm_photo_${idx}`]}</span>
+                                  )}
+                                </div>
+                              </div>
+                            </CardContent>
+                          </Card>
+                        ))}
+                      </div>
+                    )}
+                  </div>
                 </div>
               )}
 
