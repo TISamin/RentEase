@@ -1,11 +1,18 @@
 {
   "compilerOptions": {
-    "strict": true,
     "target": "ES2020",
+    "module": "ESNext",
+    "moduleResolution": "node",
+    "allowJs": false,
+    "ignoreDeprecations": "6.0",
+    "noEmit": true,
+    "strict": true,
     "experimentalDecorators": true,
     "strictPropertyInitialization": false,
-    "moduleResolution": "node",
-    "allowJs": true,
-    "outDir": "HACK_BECAUSE_OF_ALLOW_JS"
-  }
+    "resolveJsonModule": true,
+    "skipLibCheck": true,
+    "types": ["node"]
+  },
+  "include": ["frontend/src/**/*"],
+  "exclude": ["node_modules", "frontend/node_modules", "frontend/dist", "java-backend", "build", "**/*.config.js"]
 }

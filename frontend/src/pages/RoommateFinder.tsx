@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/button";
+import { Link } from "@tanstack/react-router";
 import { Input } from "@/components/ui/input";
 import {
   Select,
@@ -47,13 +48,18 @@ export default function RoommateFinder() {
       {/* Header / filter band */}
       <section className="bg-card border-b border-border">
         <div className="container mx-auto px-4 sm:px-6 py-8 sm:py-10">
-          <div className="mb-5">
-            <h1 className="font-display text-2xl sm:text-3xl font-bold text-foreground leading-tight">
-              Roommate Finder
-            </h1>
-            <p className="text-muted-foreground text-sm sm:text-base mt-1">
-              Find people looking for roommates or rooms in your area.
-            </p>
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-5">
+            <div>
+              <h1 className="font-display text-2xl sm:text-3xl font-bold text-foreground leading-tight">
+                Roommate Finder
+              </h1>
+              <p className="text-muted-foreground text-sm sm:text-base mt-1">
+                Find people looking for roommates or rooms in your area.
+              </p>
+            </div>
+            <Link to="/post-listing">
+              <Button>Post for Roommates</Button>
+            </Link>
           </div>
 
           {/* Controls row */}
