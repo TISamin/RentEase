@@ -1,0 +1,22 @@
+{
+  "overview": "A property rental and listing platform where users can post and browse vacancies across five categories (flat, hotel, house, convention hall, shifting service), with multiple image uploads, flexible location search, and user authentication.",
+  "features": [
+    "User authentication with session persistence",
+    "Editable user profile (name, address, email, phone)",
+    "Post vacancy listings with multiple image uploads",
+    "Five listing categories: flat, hotel, house, convention hall, shifting service",
+    "Browse and search listings by category and location text",
+    "Full listing detail view with image gallery",
+    "Mobile-responsive and accessible UI"
+  ],
+  "category": "productivity",
+  "tags": [
+    "rental",
+    "listings",
+    "property",
+    "real-estate",
+    "search",
+    "image-upload"
+  ],
+  "last_updated": "2026-04-29T07:54:45.243Z"
+}
