@@ -14,6 +14,9 @@ import {
   Star,
   Truck,
   User,
+  ShoppingBag,
+  Briefcase,
+  Users,
 } from "lucide-react";
 import { ListingCard, ListingCardSkeleton } from "../components/ListingCard";
 import { useAuth } from "../hooks/useAuth";
@@ -51,6 +54,33 @@ const BROWSE_CATEGORIES = [
   },
 ];
 
+const QUICK_LINKS = [
+  {
+    to: "/marketplace",
+    label: "Marketplace",
+    icon: ShoppingBag,
+    description: "Buy & sell items",
+    gradient: "from-orange-500/10 to-amber-500/10",
+    iconColor: "text-orange-600",
+  },
+  {
+    to: "/services",
+    label: "Services",
+    icon: Briefcase,
+    description: "Professional help",
+    gradient: "from-blue-500/10 to-indigo-500/10",
+    iconColor: "text-blue-600",
+  },
+  {
+    to: "/roommate-finder",
+    label: "Roommate Finder",
+    icon: Users,
+    description: "Find roommates",
+    gradient: "from-purple-500/10 to-pink-500/10",
+    iconColor: "text-purple-600",
+  },
+];
+
 const STATS = [
   { label: "Properties listed", value: "1,200+" },
   { label: "Cities covered", value: "50+" },
@@ -69,7 +99,7 @@ export default function Home() {
       {/* Authenticated welcome banner */}
       {isAuthenticated && (
         <div
-          className="bg-accent/10 border-b border-accent/20"
+          className="bg-gradient-to-r from-accent/10 via-primary/5 to-accent/10 border-b border-accent/20"
           data-ocid="home.welcome_banner.section"
         >
           <div className="container mx-auto px-4 sm:px-6 py-3 flex flex-col sm:flex-row items-center justify-between gap-3">
@@ -96,7 +126,7 @@ export default function Home() {
                 <Button
                   type="button"
                   size="sm"
-                  className="gap-1.5 h-8 bg-primary hover:bg-primary/90 text-primary-foreground"
+                  className="gap-1.5 h-8 bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary text-primary-foreground shadow-md hover:shadow-lg transition-all duration-300"
                 >
                   <ListPlus className="h-3.5 w-3.5" />
                   Post Listing
@@ -109,7 +139,7 @@ export default function Home() {
 
       {/* Hero */}
       <section
-        className="relative overflow-hidden bg-card border-b border-border"
+        className="relative overflow-hidden bg-card border-b border-border/60"
         data-ocid="home.hero.section"
       >
         {/* Background image */}
@@ -118,20 +148,25 @@ export default function Home() {
             src="/assets/generated/hero-rental.dim_1200x600.jpg"
             alt=""
             aria-hidden="true"
-            className="h-full w-full object-cover opacity-10"
+            className="h-full w-full object-cover opacity-8"
           />
-          <div className="absolute inset-0 bg-gradient-to-r from-card via-card/80 to-card/40" />
+          <div className="absolute inset-0 bg-gradient-to-r from-card via-card/85 to-card/50" />
+          <div className="absolute inset-0 bg-gradient-to-b from-transparent to-card/30" />
         </div>
 
-        <div className="relative container mx-auto px-4 sm:px-6 py-16 md:py-24">
+        {/* Decorative orbs */}
+        <div className="absolute -top-20 -right-20 w-72 h-72 bg-primary/5 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute bottom-0 -left-20 w-60 h-60 bg-accent/5 rounded-full blur-3xl pointer-events-none" />
+
+        <div className="relative container mx-auto px-4 sm:px-6 py-20 md:py-28">
           <div className="max-w-2xl">
-            <Badge className="mb-5 bg-primary/10 text-primary border-primary/25 hover:bg-primary/15 font-body text-xs tracking-wide uppercase">
-              Rentals made simple
+            <Badge className="mb-5 bg-primary/10 text-primary border-primary/25 hover:bg-primary/15 font-body text-xs tracking-wide uppercase shadow-sm">
+              ✨ Rentals made simple
             </Badge>
-            <h1 className="font-display text-4xl md:text-5xl lg:text-6xl font-bold text-foreground tracking-tight mb-5 leading-tight">
+            <h1 className="font-display text-4xl md:text-5xl lg:text-6xl font-bold text-foreground tracking-tight mb-5 leading-[1.1]">
               Find your perfect
               <br />
-              <span className="text-primary">place to stay</span>
+              <span className="text-gradient">place to stay</span>
             </h1>
             <p className="text-muted-foreground text-lg md:text-xl mb-8 leading-relaxed max-w-xl">
               Browse flats, hotels, houses, and convention halls across the
@@ -143,7 +178,7 @@ export default function Home() {
                 <Button
                   type="button"
                   size="lg"
-                  className="gap-2 w-full sm:w-auto bg-accent hover:bg-accent/90 text-accent-foreground font-semibold shadow-md"
+                  className="gap-2 w-full sm:w-auto bg-gradient-to-r from-accent to-accent/85 hover:from-accent/90 hover:to-accent text-accent-foreground font-semibold shadow-lg hover:shadow-xl transition-all duration-300 animate-pulse-ring"
                 >
                   <Search className="h-5 w-5" />
                   Browse Rentals
@@ -158,7 +193,7 @@ export default function Home() {
                     type="button"
                     size="lg"
                     variant="outline"
-                    className="gap-2 w-full sm:w-auto border-primary/40 text-primary hover:bg-primary/5"
+                    className="gap-2 w-full sm:w-auto border-primary/40 text-primary hover:bg-primary/5 hover:border-primary/60 transition-all duration-300"
                   >
                     <ListPlus className="h-5 w-5" />
                     Post a Listing
@@ -171,7 +206,7 @@ export default function Home() {
                   variant="outline"
                   onClick={login}
                   data-ocid="home.signin_cta.button"
-                  className="gap-2 w-full sm:w-auto border-primary/40 text-primary hover:bg-primary/5"
+                  className="gap-2 w-full sm:w-auto border-primary/40 text-primary hover:bg-primary/5 hover:border-primary/60 transition-all duration-300"
                 >
                   <ListPlus className="h-5 w-5" />
                   List Your Property
@@ -180,13 +215,13 @@ export default function Home() {
             </div>
 
             {/* Stats row */}
-            <div className="mt-10 flex flex-wrap gap-6">
+            <div className="mt-12 flex flex-wrap gap-8">
               {STATS.map(({ label, value }) => (
                 <div key={label} className="flex flex-col">
-                  <span className="font-display font-bold text-2xl text-primary leading-none">
+                  <span className="font-display font-bold text-3xl text-gradient leading-none">
                     {value}
                   </span>
-                  <span className="text-xs text-muted-foreground mt-0.5">
+                  <span className="text-xs text-muted-foreground mt-1 tracking-wide">
                     {label}
                   </span>
                 </div>
@@ -198,13 +233,13 @@ export default function Home() {
 
       {/* Categories */}
       <section
-        className="py-14 bg-background"
+        className="py-16 bg-background"
         data-ocid="home.categories.section"
       >
         <div className="container mx-auto px-4 sm:px-6">
-          <div className="flex items-end justify-between mb-8">
+          <div className="flex items-end justify-between mb-10">
             <div>
-              <p className="text-xs text-muted-foreground uppercase tracking-widest font-semibold mb-1">
+              <p className="text-xs text-accent uppercase tracking-widest font-semibold mb-1.5">
                 Explore
               </p>
               <h2 className="font-display text-2xl md:text-3xl font-bold text-foreground">
@@ -232,14 +267,18 @@ export default function Home() {
                   search={{ category }}
                   data-ocid={`home.category_card.${category}`}
                 >
-                  <Card className="group cursor-pointer border border-border hover:border-primary/30 hover:shadow-lg transition-smooth h-full">
-                    <CardContent className="p-5 flex flex-col gap-3">
-                      <div
-                        className={`flex h-11 w-11 items-center justify-center rounded-xl transition-smooth ${bgClass}`}
-                      >
-                        <Icon className="h-5 w-5" />
+                  <Card className="group cursor-pointer border border-border/60 hover:border-primary/40 hover:shadow-xl transition-all duration-300 h-full rounded-xl overflow-hidden">
+                    <CardContent className="p-5 flex flex-col gap-3 relative">
+                      {/* Subtle background gradient on hover */}
+                      <div className="absolute inset-0 bg-gradient-to-br from-primary/0 to-accent/0 group-hover:from-primary/3 group-hover:to-accent/3 transition-all duration-500" />
+                      <div className="relative">
+                        <div
+                          className={`flex h-12 w-12 items-center justify-center rounded-xl transition-all duration-300 ${bgClass}`}
+                        >
+                          <Icon className="h-5 w-5" />
+                        </div>
                       </div>
-                      <div>
+                      <div className="relative">
                         <h3 className="font-display font-semibold text-foreground text-sm leading-tight">
                           {CATEGORY_LABELS[category]}
                         </h3>
@@ -247,7 +286,7 @@ export default function Home() {
                           {description}
                         </p>
                       </div>
-                      <div className="flex items-center gap-1 text-xs text-primary font-medium mt-auto opacity-0 group-hover:opacity-100 transition-smooth">
+                      <div className="relative flex items-center gap-1 text-xs text-primary font-medium mt-auto opacity-0 group-hover:opacity-100 translate-x-0 group-hover:translate-x-1 transition-all duration-300">
                         <span>Browse</span>
                         <ChevronRight className="h-3 w-3" />
                       </div>
@@ -260,21 +299,48 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Quick links to other sections */}
+      <section className="py-4 pb-16 bg-background">
+        <div className="container mx-auto px-4 sm:px-6">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            {QUICK_LINKS.map(({ to, label, icon: Icon, description, gradient, iconColor }) => (
+              <Link key={to} to={to}>
+                <Card className={`group cursor-pointer border border-border/60 hover:border-primary/30 hover:shadow-lg transition-all duration-300 rounded-xl overflow-hidden bg-gradient-to-br ${gradient}`}>
+                  <CardContent className="p-5 flex items-center gap-4">
+                    <div className={`flex h-11 w-11 items-center justify-center rounded-xl bg-white/60 shadow-sm ${iconColor} group-hover:scale-110 transition-transform duration-300`}>
+                      <Icon className="h-5 w-5" />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <h3 className="font-display font-semibold text-foreground text-sm">{label}</h3>
+                      <p className="text-xs text-muted-foreground">{description}</p>
+                    </div>
+                    <ChevronRight className="h-4 w-4 text-muted-foreground group-hover:text-primary group-hover:translate-x-1 transition-all duration-200" />
+                  </CardContent>
+                </Card>
+              </Link>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* How it works */}
       <section
-        className="py-14 bg-muted/30 border-y border-border"
+        className="py-16 bg-muted/20 border-y border-border/60 relative overflow-hidden"
         data-ocid="home.how_it_works.section"
       >
-        <div className="container mx-auto px-4 sm:px-6">
-          <div className="text-center mb-10">
-            <p className="text-xs text-muted-foreground uppercase tracking-widest font-semibold mb-1">
+        {/* Decorative background */}
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[600px] bg-gradient-to-br from-primary/3 to-accent/3 rounded-full blur-3xl pointer-events-none" />
+
+        <div className="relative container mx-auto px-4 sm:px-6">
+          <div className="text-center mb-12">
+            <p className="text-xs text-accent uppercase tracking-widest font-semibold mb-1.5">
               Simple process
             </p>
             <h2 className="font-display text-2xl md:text-3xl font-bold text-foreground">
               How RentEase works
             </h2>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-3xl mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto">
             {[
               {
                 icon: Search,
@@ -297,18 +363,18 @@ export default function Home() {
             ].map(({ icon: Icon, step, title, desc }) => (
               <div
                 key={step}
-                className="flex flex-col items-center text-center gap-3"
+                className="flex flex-col items-center text-center gap-4 group"
               >
-                <div className="relative flex h-14 w-14 items-center justify-center rounded-2xl bg-card border border-border shadow-sm">
-                  <Icon className="h-6 w-6 text-primary" />
-                  <span className="absolute -top-2 -right-2 flex h-5 w-5 items-center justify-center rounded-full bg-primary text-primary-foreground text-[10px] font-bold font-display">
+                <div className="relative flex h-16 w-16 items-center justify-center rounded-2xl bg-card border border-border/60 shadow-md group-hover:shadow-lg transition-all duration-300 group-hover:-translate-y-1">
+                  <Icon className="h-7 w-7 text-primary" />
+                  <span className="absolute -top-2.5 -right-2.5 flex h-6 w-6 items-center justify-center rounded-full bg-gradient-to-br from-primary to-primary/80 text-primary-foreground text-[11px] font-bold font-display shadow-md">
                     {step}
                   </span>
                 </div>
-                <h3 className="font-display font-semibold text-foreground">
+                <h3 className="font-display font-semibold text-foreground text-lg">
                   {title}
                 </h3>
-                <p className="text-sm text-muted-foreground leading-relaxed">
+                <p className="text-sm text-muted-foreground leading-relaxed max-w-xs">
                   {desc}
                 </p>
               </div>
@@ -319,13 +385,13 @@ export default function Home() {
 
       {/* Featured listings */}
       <section
-        className="py-14 bg-background"
+        className="py-16 bg-background"
         data-ocid="home.featured.section"
       >
         <div className="container mx-auto px-4 sm:px-6">
-          <div className="flex items-end justify-between mb-8">
+          <div className="flex items-end justify-between mb-10">
             <div>
-              <p className="text-xs text-muted-foreground uppercase tracking-widest font-semibold mb-1">
+              <p className="text-xs text-accent uppercase tracking-widest font-semibold mb-1.5">
                 Recently added
               </p>
               <h2 className="font-display text-2xl md:text-3xl font-bold text-foreground">
@@ -357,14 +423,14 @@ export default function Home() {
             </div>
           ) : featured.length === 0 ? (
             <div
-              className="flex flex-col items-center justify-center rounded-xl border border-dashed border-border bg-muted/20 py-16 gap-4 text-center"
+              className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-border/60 bg-gradient-to-br from-muted/20 to-muted/5 py-20 gap-5 text-center"
               data-ocid="home.featured.empty_state"
             >
-              <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-muted">
-                <Building2 className="h-7 w-7 text-muted-foreground/50" />
+              <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-muted shadow-inner">
+                <Building2 className="h-8 w-8 text-muted-foreground/40" />
               </div>
               <div>
-                <h3 className="font-display font-semibold text-foreground mb-1">
+                <h3 className="font-display font-semibold text-foreground mb-1.5 text-lg">
                   No listings yet
                 </h3>
                 <p className="text-muted-foreground text-sm">
@@ -373,8 +439,8 @@ export default function Home() {
               </div>
               {isAuthenticated ? (
                 <Link to="/post-listing" data-ocid="home.empty_post.button">
-                  <Button type="button">
-                    <ListPlus className="h-4 w-4 mr-1.5" />
+                  <Button type="button" className="gap-2 shadow-md">
+                    <ListPlus className="h-4 w-4" />
                     Post a Listing
                   </Button>
                 </Link>
@@ -383,6 +449,7 @@ export default function Home() {
                   type="button"
                   onClick={login}
                   data-ocid="home.empty_signin.button"
+                  className="gap-2 shadow-md"
                 >
                   Sign in to Post
                 </Button>
@@ -404,14 +471,21 @@ export default function Home() {
 
       {/* CTA banner */}
       <section
-        className="py-14 bg-primary/5 border-t border-primary/15"
+        className="py-16 relative overflow-hidden"
         data-ocid="home.cta_banner.section"
       >
-        <div className="container mx-auto px-4 sm:px-6 text-center max-w-xl">
+        {/* Gradient background */}
+        <div className="absolute inset-0 bg-gradient-to-br from-primary/8 via-accent/5 to-primary/8" />
+        <div className="absolute inset-0 border-t border-primary/10" />
+        {/* Decorative orbs */}
+        <div className="absolute -top-10 right-1/4 w-40 h-40 bg-primary/8 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute -bottom-10 left-1/4 w-52 h-52 bg-accent/8 rounded-full blur-3xl pointer-events-none" />
+
+        <div className="relative container mx-auto px-4 sm:px-6 text-center max-w-xl">
           <h2 className="font-display text-2xl md:text-3xl font-bold text-foreground mb-3">
             Have a property to rent?
           </h2>
-          <p className="text-muted-foreground mb-7 leading-relaxed">
+          <p className="text-muted-foreground mb-8 leading-relaxed">
             Reach thousands of renters by listing your flat, hotel, house, or
             event space on RentEase.
           </p>
@@ -420,7 +494,7 @@ export default function Home() {
               <Button
                 type="button"
                 size="lg"
-                className="gap-2 bg-primary hover:bg-primary/90 text-primary-foreground shadow-md"
+                className="gap-2 bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary text-primary-foreground shadow-lg hover:shadow-xl transition-all duration-300"
               >
                 <ListPlus className="h-5 w-5" />
                 Post Your Listing Now
@@ -432,7 +506,7 @@ export default function Home() {
               size="lg"
               onClick={login}
               data-ocid="home.cta_signin.button"
-              className="gap-2 bg-primary hover:bg-primary/90 text-primary-foreground shadow-md"
+              className="gap-2 bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary text-primary-foreground shadow-lg hover:shadow-xl transition-all duration-300"
             >
               <ListPlus className="h-5 w-5" />
               Sign In & List Your Property

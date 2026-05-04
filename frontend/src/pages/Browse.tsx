@@ -8,7 +8,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Building2, Search, SlidersHorizontal } from "lucide-react";
+import { Building2, PlusCircle, Search, SlidersHorizontal } from "lucide-react";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { ListingCard, ListingCardSkeleton } from "../components/ListingCard";
 import { useBrowseListings } from "../hooks/useBackend";
@@ -57,8 +57,12 @@ export default function Browse() {
   return (
     <main className="min-h-screen bg-background" data-ocid="browse.page">
       {/* Header / filter band */}
-      <section className="bg-card border-b border-border">
-        <div className="container mx-auto px-4 sm:px-6 py-8 sm:py-10">
+      <section className="relative bg-card border-b border-border/60 overflow-hidden">
+        {/* Decorative gradient */}
+        <div className="absolute inset-0 bg-gradient-to-br from-primary/3 via-transparent to-accent/3 pointer-events-none" />
+        <div className="absolute -top-20 -right-20 w-60 h-60 bg-primary/5 rounded-full blur-3xl pointer-events-none" />
+
+        <div className="relative container mx-auto px-4 sm:px-6 py-8 sm:py-10">
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-5">
             <div>
               <h1 className="font-display text-2xl sm:text-3xl font-bold text-foreground leading-tight">
@@ -69,7 +73,10 @@ export default function Browse() {
               </p>
             </div>
             <Link to="/post-listing">
-              <Button>Add Rentals</Button>
+              <Button className="gap-2 bg-gradient-to-r from-primary to-primary/80 shadow-md hover:shadow-lg transition-all duration-300">
+                <PlusCircle className="h-4 w-4" />
+                Add Rentals
+              </Button>
             </Link>
           </div>
 
@@ -87,7 +94,7 @@ export default function Browse() {
                 placeholder="Search by city, area, or location…"
                 value={locationInput}
                 onChange={(e) => setLocationInput(e.target.value)}
-                className="pl-9 bg-background border-input focus-visible:ring-accent"
+                className="pl-9 bg-background/80 backdrop-blur-sm border-input/60 focus-visible:ring-accent"
                 aria-label="Search by location"
               />
             </div>
@@ -97,7 +104,7 @@ export default function Browse() {
               <Select value={categoryValue} onValueChange={setCategoryValue}>
                 <SelectTrigger
                   data-ocid="browse.category.select"
-                  className="bg-background border-input w-full"
+                  className="bg-background/80 backdrop-blur-sm border-input/60 w-full"
                   aria-label="Filter by category"
                 >
                   <div className="flex items-center gap-1.5 min-w-0">
@@ -179,11 +186,11 @@ export default function Browse() {
         {/* Error state */}
         {isError && !isLoading && (
           <div
-            className="flex flex-col items-center justify-center py-20 gap-3 text-center"
+            className="flex flex-col items-center justify-center py-20 gap-4 text-center"
             data-ocid="browse.error_state"
             role="alert"
           >
-            <div className="rounded-full bg-destructive/10 p-5">
+            <div className="rounded-2xl bg-destructive/10 p-5">
               <Building2
                 className="h-10 w-10 text-destructive/60"
                 aria-hidden="true"
@@ -198,12 +205,12 @@ export default function Browse() {
         {/* Empty state */}
         {!isLoading && !isError && listings?.length === 0 && (
           <div
-            className="flex flex-col items-center justify-center py-20 gap-4 text-center"
+            className="flex flex-col items-center justify-center py-20 gap-5 text-center"
             data-ocid="browse.empty_state"
           >
-            <div className="rounded-full bg-muted p-5">
+            <div className="rounded-2xl bg-gradient-to-br from-muted to-muted/50 p-5 shadow-inner">
               <Building2
-                className="h-10 w-10 text-muted-foreground/60"
+                className="h-10 w-10 text-muted-foreground/50"
                 aria-hidden="true"
               />
             </div>

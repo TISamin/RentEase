@@ -40,7 +40,7 @@ function GalleryImage({
     <img
       src={imageKey}
       alt={alt}
-      className={`${className ?? ""} object-cover transition-smooth cursor-pointer ${
+      className={`${className ?? ""} object-cover transition-all duration-300 cursor-pointer ${
         isActive ? "ring-2 ring-primary ring-offset-2" : ""
       }`}
       onClick={onClick}
@@ -58,7 +58,7 @@ function ListingDetailSkeleton() {
       <Skeleton className="h-8 w-32 mb-6" />
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
         <div className="md:col-span-2 flex flex-col gap-4">
-          <Skeleton className="aspect-video w-full rounded-xl" />
+          <Skeleton className="aspect-video w-full rounded-2xl" />
           <div className="grid grid-cols-4 gap-2">
             {[0, 1, 2, 3].map((i) => (
               <Skeleton key={i} className="aspect-square rounded-lg" />
@@ -155,7 +155,7 @@ export default function ListingDetail() {
 
   return (
     <div className="bg-background min-h-screen" data-ocid="listing_detail.page">
-      <div className="container mx-auto px-4 sm:px-6 py-8 max-w-5xl">
+      <div className="container mx-auto px-4 sm:px-6 py-8 max-w-5xl animate-fade-in-up">
         {/* Back + owner actions row */}
         <div className="flex items-center justify-between mb-6 gap-4">
           <Link to="/browse" data-ocid="listing_detail.back.link">
@@ -221,7 +221,7 @@ export default function ListingDetail() {
           <div className="md:col-span-2 flex flex-col gap-6">
             {/* Main image */}
             <div
-              className="aspect-video overflow-hidden rounded-xl bg-muted border border-border shadow-sm"
+              className="aspect-video overflow-hidden rounded-2xl bg-muted border border-border/60 shadow-lg"
               data-ocid="listing_detail.gallery.panel"
             >
               {hasImages ? (
@@ -252,10 +252,10 @@ export default function ListingDetail() {
                     type="button"
                     aria-label={`View image ${i + 1}`}
                     onClick={() => setActiveIndex(i)}
-                    className={`aspect-square overflow-hidden rounded-lg border-2 transition-smooth focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${
+                    className={`aspect-square overflow-hidden rounded-xl border-2 transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${
                       i === safeIndex
-                        ? "border-primary shadow-sm"
-                        : "border-border hover:border-primary/50"
+                        ? "border-primary shadow-md"
+                        : "border-border/60 hover:border-primary/50"
                     }`}
                     data-ocid={`listing_detail.thumbnail.${i + 1}`}
                   >
@@ -282,15 +282,15 @@ export default function ListingDetail() {
 
             {/* Current Roommates */}
             {parsedMetadata?.currentRoommates && parsedMetadata.currentRoommates.length > 0 && (
-              <div className="pt-6 border-t border-border mt-2">
+              <div className="pt-6 border-t border-border/60 mt-2">
                 <h2 className="font-display font-semibold text-foreground text-lg mb-4 flex items-center gap-2">
                   <Users className="h-5 w-5 text-muted-foreground" />
                   Meet the Current Roommates
                 </h2>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   {parsedMetadata.currentRoommates.map((rm: any, idx: number) => (
-                    <Card key={idx} className="overflow-hidden border border-border shadow-sm">
-                      <div className="flex flex-row items-center p-4 gap-4 bg-muted/20">
+                    <Card key={idx} className="overflow-hidden border border-border/60 shadow-sm rounded-xl">
+                      <div className="flex flex-row items-center p-4 gap-4 bg-gradient-to-r from-muted/30 to-muted/10">
                         {rm.photoData ? (
                           <div className="h-16 w-16 rounded-full overflow-hidden border-2 border-background shadow-sm shrink-0">
                             <img src={rm.photoData} alt={rm.name} className="h-full w-full object-cover" />
@@ -319,7 +319,7 @@ export default function ListingDetail() {
           {/* Right: info card */}
           <div className="flex flex-col gap-4">
             <Card
-              className="border border-border shadow-sm sticky top-6"
+              className="border border-border/60 shadow-lg sticky top-20 rounded-2xl bg-card/90 backdrop-blur-sm"
               data-ocid="listing_detail.info.card"
             >
               <CardContent className="p-5 flex flex-col gap-5">
@@ -367,7 +367,7 @@ export default function ListingDetail() {
                 )}
 
                 {/* Contact */}
-                <div className="border-t border-border pt-4">
+                <div className="border-t border-border/60 pt-4">
                   <p className="text-xs text-muted-foreground mb-2 font-semibold uppercase tracking-wider">
                     Contact
                   </p>
@@ -385,7 +385,7 @@ export default function ListingDetail() {
                 <a href={`tel:${listing.contactPhone}`} className="block">
                   <Button
                     type="button"
-                    className="w-full gap-2 bg-accent text-accent-foreground hover:bg-accent/90 transition-smooth"
+                    className="w-full gap-2 bg-gradient-to-r from-accent to-accent/85 hover:from-accent/90 hover:to-accent text-accent-foreground shadow-md hover:shadow-lg transition-all duration-300"
                     data-ocid="listing_detail.call.primary_button"
                   >
                     <Phone className="h-4 w-4" />

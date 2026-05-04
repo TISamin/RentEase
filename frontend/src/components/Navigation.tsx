@@ -76,15 +76,20 @@ export function Navigation({
               to={item.to}
               onClick={onNavigate}
               data-ocid={`nav.${item.label.toLowerCase().replace(/\s+/g, "_")}.link`}
-              className={`flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-smooth ${
+              className={`flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-all duration-200 ${
                 isActive
-                  ? "bg-primary/10 text-primary"
-                  : "text-foreground/70 hover:bg-muted hover:text-foreground"
+                  ? "bg-gradient-to-r from-primary/10 to-accent/5 text-primary shadow-sm"
+                  : "text-foreground/70 hover:bg-muted/70 hover:text-foreground"
               }`}
               aria-current={isActive ? "page" : undefined}
             >
-              {item.icon}
+              <span className={`transition-transform duration-200 ${isActive ? "scale-110" : ""}`}>
+                {item.icon}
+              </span>
               {item.label}
+              {isActive && (
+                <span className="ml-auto h-1.5 w-1.5 rounded-full bg-primary animate-pulse" />
+              )}
             </Link>
           );
         })}
@@ -95,7 +100,7 @@ export function Navigation({
   return (
     <nav
       aria-label="Main navigation"
-      className="hidden md:flex items-center gap-1"
+      className="hidden md:flex items-center gap-0.5"
     >
       {visibleItems.map((item) => {
         const isActive =
@@ -107,15 +112,18 @@ export function Navigation({
             key={item.to}
             to={item.to}
             data-ocid={`nav.${item.label.toLowerCase().replace(/\s+/g, "_")}.link`}
-            className={`flex items-center gap-1.5 rounded-md px-3 py-1.5 text-sm font-medium transition-smooth ${
+            className={`relative flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm font-medium transition-all duration-200 ${
               isActive
                 ? "bg-primary/10 text-primary"
-                : "text-foreground/70 hover:bg-muted hover:text-foreground"
+                : "text-foreground/60 hover:text-foreground hover:bg-muted/50"
             }`}
             aria-current={isActive ? "page" : undefined}
           >
             {item.icon}
             {item.label}
+            {isActive && (
+              <span className="absolute bottom-0 left-1/2 -translate-x-1/2 h-0.5 w-4 rounded-full bg-primary" />
+            )}
           </Link>
         );
       })}

@@ -11,20 +11,20 @@ export function Header() {
   const [mobileOpen, setMobileOpen] = useState(false);
 
   return (
-    <header className="sticky top-0 z-50 w-full bg-card border-b border-border shadow-xs">
+    <header className="sticky top-0 z-50 w-full border-b border-border/60 bg-card/80 backdrop-blur-xl backdrop-saturate-150 shadow-[0_1px_3px_0_rgba(0,0,0,0.04)]">
       <div className="container mx-auto flex h-16 items-center justify-between px-4 sm:px-6">
         {/* Logo */}
         <Link
           to="/"
           data-ocid="nav.home.link"
-          className="flex items-center gap-2 group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-md px-1"
+          className="flex items-center gap-2.5 group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-md px-1"
         >
-          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary">
+          <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-primary to-accent shadow-md group-hover:shadow-lg transition-all duration-300 group-hover:scale-105">
             <span className="text-primary-foreground font-display font-bold text-sm">
               R
             </span>
           </div>
-          <span className="font-display font-bold text-xl text-foreground tracking-tight group-hover:text-primary transition-colors duration-200">
+          <span className="font-display font-bold text-xl text-foreground tracking-tight group-hover:text-gradient transition-colors duration-300">
             RentEase
           </span>
         </Link>
@@ -41,7 +41,7 @@ export function Header() {
                   type="button"
                   variant="ghost"
                   size="sm"
-                  className="gap-1.5"
+                  className="gap-1.5 hover:bg-primary/5"
                 >
                   <User className="h-4 w-4" />
                   Profile
@@ -53,7 +53,7 @@ export function Header() {
                 size="sm"
                 onClick={logout}
                 data-ocid="auth.logout_button"
-                className="gap-1.5"
+                className="gap-1.5 border-border/60 hover:bg-destructive/5 hover:text-destructive hover:border-destructive/30"
               >
                 <LogOut className="h-4 w-4" />
                 Sign out
@@ -65,7 +65,7 @@ export function Header() {
               disabled={isLoading}
               size="sm"
               data-ocid="auth.login_button"
-              className="gap-1.5"
+              className="gap-1.5 bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary shadow-md hover:shadow-lg transition-all duration-300"
             >
               <LogIn className="h-4 w-4" />
               {isLoading ? "Signing in…" : "Sign in"}
@@ -93,13 +93,13 @@ export function Header() {
             </SheetTrigger>
             <SheetContent
               side="right"
-              className="w-72 bg-card p-0"
+              className="w-72 bg-card/95 backdrop-blur-xl p-0 border-l border-border/40"
               data-ocid="nav.mobile_menu.sheet"
             >
               <div className="flex flex-col h-full">
                 {/* Mobile header */}
-                <div className="flex items-center gap-2 px-5 py-4 border-b border-border">
-                  <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-primary">
+                <div className="flex items-center gap-2.5 px-5 py-4 border-b border-border/40">
+                  <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-gradient-to-br from-primary to-accent shadow-sm">
                     <span className="text-primary-foreground font-display font-bold text-xs">
                       R
                     </span>
@@ -118,11 +118,11 @@ export function Header() {
                 </div>
 
                 {/* Mobile auth */}
-                <div className="px-4 py-4 border-t border-border">
+                <div className="px-4 py-4 border-t border-border/40">
                   {isAuthenticated ? (
                     <Button
                       variant="outline"
-                      className="w-full gap-2"
+                      className="w-full gap-2 border-border/60"
                       onClick={() => {
                         logout();
                         setMobileOpen(false);
@@ -134,7 +134,7 @@ export function Header() {
                     </Button>
                   ) : (
                     <Button
-                      className="w-full gap-2"
+                      className="w-full gap-2 bg-gradient-to-r from-primary to-primary/80"
                       onClick={() => {
                         login();
                         setMobileOpen(false);

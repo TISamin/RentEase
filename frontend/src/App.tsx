@@ -45,18 +45,22 @@ const rootRoute = createRootRoute({
     if (!isAuthenticated) {
       return (
         <Layout>
-          <div className="flex flex-col items-center justify-center min-h-[60vh] text-center px-4">
-            <div className="bg-card p-8 rounded-xl shadow-sm border border-border max-w-md w-full animate-in fade-in zoom-in duration-300">
-              <div className="flex h-12 w-12 items-center justify-center rounded-full bg-primary/10 mx-auto mb-4">
-                <span className="text-primary font-display font-bold text-xl">R</span>
+          <div className="flex flex-col items-center justify-center min-h-[60vh] text-center px-4 relative">
+            {/* Decorative background orbs */}
+            <div className="absolute -top-20 left-1/4 w-60 h-60 bg-primary/5 rounded-full blur-3xl pointer-events-none" />
+            <div className="absolute -bottom-20 right-1/4 w-52 h-52 bg-accent/5 rounded-full blur-3xl pointer-events-none" />
+
+            <div className="relative bg-card/80 backdrop-blur-xl p-8 sm:p-10 rounded-2xl shadow-xl border border-border/60 max-w-md w-full animate-fade-in-up">
+              <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-primary to-accent mx-auto mb-5 shadow-lg">
+                <span className="text-primary-foreground font-display font-bold text-xl">R</span>
               </div>
-              <h2 className="text-2xl font-display font-bold mb-2">Welcome to RentEase</h2>
-              <p className="text-muted-foreground mb-6">
+              <h2 className="text-2xl font-display font-bold mb-2">Welcome to <span className="text-gradient">RentEase</span></h2>
+              <p className="text-muted-foreground mb-7 leading-relaxed">
                 Please log in or create an account to access the platform.
               </p>
               <button 
                 onClick={login}
-                className="w-full bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2 rounded-md font-medium transition-colors"
+                className="w-full bg-gradient-to-r from-primary to-primary/80 text-primary-foreground hover:from-primary/90 hover:to-primary h-11 px-4 py-2 rounded-xl font-medium transition-all duration-300 shadow-md hover:shadow-lg"
               >
                 Log In / Sign Up
               </button>

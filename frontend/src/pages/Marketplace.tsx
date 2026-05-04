@@ -2,19 +2,14 @@ import { Button } from "@/components/ui/button";
 import { Link } from "@tanstack/react-router";
 import { Input } from "@/components/ui/input";
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
+  Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
 } from "@/components/ui/select";
-import { Building2, Search, SlidersHorizontal } from "lucide-react";
+import { Building2, PlusCircle, Search, SlidersHorizontal, ShoppingBag } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
 import { ListingCard, ListingCardSkeleton } from "../components/ListingCard";
 import { useBrowseListings } from "../hooks/useBackend";
 import type { BrowseFilter } from "../types";
-import { BROWSE_CATEGORIES, CATEGORY_LABELS } from "../types";
-import { Category } from "../types";
+import { BROWSE_CATEGORIES, CATEGORY_LABELS, Category } from "../types";
 
 function useDebounce<T>(value: T, delay = 350): T {
   const [debounced, setDebounced] = useState<T>(value);
@@ -27,180 +22,78 @@ function useDebounce<T>(value: T, delay = 350): T {
 
 export default function Marketplace() {
   const [searchInput, setSearchInput] = useState("");
-
   const debouncedSearch = useDebounce(searchInput, 350);
-
-  const filter: BrowseFilter = {
-    searchQuery: debouncedSearch.trim() || undefined,
-    category: Category.marketplace,
-  };
-
+  const filter: BrowseFilter = { searchQuery: debouncedSearch.trim() || undefined, category: Category.marketplace };
   const { data: listings, isLoading, isError } = useBrowseListings(filter);
-
   const hasActiveFilters = searchInput.trim() !== "";
-
-  const handleClearFilters = useCallback(() => {
-    setSearchInput("");
-  }, []);
+  const handleClearFilters = useCallback(() => { setSearchInput(""); }, []);
 
   return (
     <main className="min-h-screen bg-background" data-ocid="marketplace.page">
-      {/* Header / filter band */}
-      <section className="bg-card border-b border-border">
-        <div className="container mx-auto px-4 sm:px-6 py-8 sm:py-10">
+      <section className="relative bg-card border-b border-border/60 overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-br from-orange-500/3 via-transparent to-amber-500/3 pointer-events-none" />
+        <div className="absolute -top-20 -left-20 w-60 h-60 bg-orange-500/5 rounded-full blur-3xl pointer-events-none" />
+        <div className="relative container mx-auto px-4 sm:px-6 py-8 sm:py-10">
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-5">
-            <div>
-              <h1 className="font-display text-2xl sm:text-3xl font-bold text-foreground leading-tight">
-                Marketplace
-              </h1>
-              <p className="text-muted-foreground text-sm sm:text-base mt-1">
-                Find used furniture, appliances, and items for your home.
-              </p>
+            <div className="flex items-center gap-3">
+              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-orange-500/20 to-amber-500/20 text-orange-600">
+                <ShoppingBag className="h-5 w-5" />
+              </div>
+              <div>
+                <h1 className="font-display text-2xl sm:text-3xl font-bold text-foreground leading-tight">Marketplace</h1>
+                <p className="text-muted-foreground text-sm sm:text-base mt-0.5">Find used furniture, appliances, and items for your home.</p>
+              </div>
             </div>
             <Link to="/post-listing">
-              <Button>Sell Item</Button>
+              <Button className="gap-2 bg-gradient-to-r from-orange-600 to-amber-600 hover:from-orange-700 hover:to-amber-700 text-white shadow-md hover:shadow-lg transition-all duration-300">
+                <PlusCircle className="h-4 w-4" />Sell Item
+              </Button>
             </Link>
           </div>
-
-          {/* Controls row */}
           <div className="flex flex-col sm:flex-row gap-3 max-w-3xl">
-            {/* Search */}
             <div className="relative flex-1">
-              <Search
-                className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none"
-                aria-hidden="true"
-              />
-              <Input
-                data-ocid="marketplace.search_input"
-                type="search"
-                placeholder="Search items by name or description…"
-                value={searchInput}
-                onChange={(e) => setSearchInput(e.target.value)}
-                className="pl-9 bg-background border-input focus-visible:ring-accent"
-                aria-label="Search marketplace items"
-              />
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" aria-hidden="true" />
+              <Input data-ocid="marketplace.search_input" type="search" placeholder="Search items by name or description…" value={searchInput} onChange={(e) => setSearchInput(e.target.value)} className="pl-9 bg-background/80 backdrop-blur-sm border-input/60 focus-visible:ring-orange-500/50" aria-label="Search marketplace items" />
             </div>
-
           </div>
         </div>
       </section>
 
-      {/* Results area */}
       <section className="container mx-auto px-4 sm:px-6 py-8">
-        {/* Meta row: count + clear */}
         <div className="flex items-center justify-between mb-6 min-h-6 gap-2">
           {!isLoading && !isError && listings !== undefined && (
             <p className="text-sm text-muted-foreground" aria-live="polite">
-              {listings.length === 0 ? (
-                "No results"
-              ) : (
-                <>
-                  <span className="font-semibold text-foreground">
-                    {listings.length}
-                  </span>{" "}
-                  {listings.length === 1 ? "listing" : "listings"} found
-                </>
-              )}
+              {listings.length === 0 ? "No results" : (<><span className="font-semibold text-foreground">{listings.length}</span>{" "}{listings.length === 1 ? "listing" : "listings"} found</>)}
             </p>
           )}
-
           {hasActiveFilters && (
-            <Button
-              type="button"
-              variant="ghost"
-              size="sm"
-              onClick={handleClearFilters}
-              data-ocid="browse.clear_filters.button"
-              className="ml-auto text-accent hover:text-accent/80 hover:bg-accent/10 px-2 h-7 text-xs"
-            >
-              Clear filters
-            </Button>
+            <Button type="button" variant="ghost" size="sm" onClick={handleClearFilters} data-ocid="browse.clear_filters.button" className="ml-auto text-accent hover:text-accent/80 hover:bg-accent/10 px-2 h-7 text-xs">Clear filters</Button>
           )}
         </div>
 
-        {/* Loading skeletons */}
-        {isLoading && (
-          <div
-            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5"
-            data-ocid="browse.loading_state"
-            aria-busy="true"
-            aria-label="Loading listings"
-          >
-            {Array.from({ length: 6 }).map((_, i) => (
-              // biome-ignore lint/suspicious/noArrayIndexKey: skeleton placeholders have no stable key
-              <ListingCardSkeleton key={i} />
-            ))}
-          </div>
-        )}
+        {isLoading && (<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5" data-ocid="browse.loading_state" aria-busy="true" aria-label="Loading listings">{Array.from({ length: 6 }).map((_, i) => (<ListingCardSkeleton key={i} />))}</div>)}
 
-        {/* Error state */}
         {isError && !isLoading && (
-          <div
-            className="flex flex-col items-center justify-center py-20 gap-3 text-center"
-            data-ocid="browse.error_state"
-            role="alert"
-          >
-            <div className="rounded-full bg-destructive/10 p-5">
-              <Building2
-                className="h-10 w-10 text-destructive/60"
-                aria-hidden="true"
-              />
-            </div>
-            <p className="text-muted-foreground text-sm">
-              Something went wrong loading listings. Please try again.
-            </p>
+          <div className="flex flex-col items-center justify-center py-20 gap-4 text-center" data-ocid="browse.error_state" role="alert">
+            <div className="rounded-2xl bg-destructive/10 p-5"><Building2 className="h-10 w-10 text-destructive/60" aria-hidden="true" /></div>
+            <p className="text-muted-foreground text-sm">Something went wrong loading listings. Please try again.</p>
           </div>
         )}
 
-        {/* Empty state */}
         {!isLoading && !isError && listings?.length === 0 && (
-          <div
-            className="flex flex-col items-center justify-center py-20 gap-4 text-center"
-            data-ocid="browse.empty_state"
-          >
-            <div className="rounded-full bg-muted p-5">
-              <Building2
-                className="h-10 w-10 text-muted-foreground/60"
-                aria-hidden="true"
-              />
-            </div>
+          <div className="flex flex-col items-center justify-center py-20 gap-5 text-center" data-ocid="browse.empty_state">
+            <div className="rounded-2xl bg-gradient-to-br from-orange-500/10 to-amber-500/10 p-5 shadow-inner"><ShoppingBag className="h-10 w-10 text-orange-500/50" aria-hidden="true" /></div>
             <div className="flex flex-col gap-1">
-              <h2 className="font-display font-semibold text-foreground text-lg">
-                No listings found
-              </h2>
-              <p className="text-muted-foreground text-sm max-w-xs">
-                {hasActiveFilters
-                  ? "Try adjusting your location search or changing the category filter."
-                  : "No listings are available right now. Check back soon."}
-              </p>
+              <h2 className="font-display font-semibold text-foreground text-lg">No items found</h2>
+              <p className="text-muted-foreground text-sm max-w-xs">{hasActiveFilters ? "Try adjusting your search terms." : "No marketplace items are available right now. Check back soon."}</p>
             </div>
-            {hasActiveFilters && (
-              <Button
-                type="button"
-                variant="outline"
-                size="sm"
-                onClick={handleClearFilters}
-                data-ocid="browse.empty_state.clear_button"
-              >
-                Clear all filters
-              </Button>
-            )}
+            {hasActiveFilters && (<Button type="button" variant="outline" size="sm" onClick={handleClearFilters} data-ocid="browse.empty_state.clear_button">Clear all filters</Button>)}
           </div>
         )}
 
-        {/* Listings grid */}
         {!isLoading && !isError && listings && listings.length > 0 && (
-          <div
-            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5"
-            data-ocid="browse.list"
-          >
-            {listings.map((listing, index) => (
-              <ListingCard
-                key={listing.id.toString()}
-                listing={listing}
-                index={index}
-              />
-            ))}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5" data-ocid="browse.list">
+            {listings.map((listing, index) => (<ListingCard key={listing.id.toString()} listing={listing} index={index} />))}
           </div>
         )}
       </section>

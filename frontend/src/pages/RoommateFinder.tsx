@@ -2,19 +2,14 @@ import { Button } from "@/components/ui/button";
 import { Link } from "@tanstack/react-router";
 import { Input } from "@/components/ui/input";
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
+  Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
 } from "@/components/ui/select";
-import { Building2, Search, SlidersHorizontal } from "lucide-react";
+import { Building2, PlusCircle, Search, SlidersHorizontal, Users } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
 import { ListingCard, ListingCardSkeleton } from "../components/ListingCard";
 import { useBrowseListings } from "../hooks/useBackend";
 import type { BrowseFilter } from "../types";
-import { BROWSE_CATEGORIES, CATEGORY_LABELS } from "../types";
-import { Category } from "../types";
+import { BROWSE_CATEGORIES, CATEGORY_LABELS, Category } from "../types";
 
 function useDebounce<T>(value: T, delay = 350): T {
   const [debounced, setDebounced] = useState<T>(value);
@@ -27,180 +22,79 @@ function useDebounce<T>(value: T, delay = 350): T {
 
 export default function RoommateFinder() {
   const [locationInput, setLocationInput] = useState("");
-
   const debouncedLocation = useDebounce(locationInput, 350);
-
-  const filter: BrowseFilter = {
-    locationQuery: debouncedLocation.trim() || undefined,
-    category: Category.roommate_finder,
-  };
-
+  const filter: BrowseFilter = { locationQuery: debouncedLocation.trim() || undefined, category: Category.roommate_finder };
   const { data: listings, isLoading, isError } = useBrowseListings(filter);
-
   const hasActiveFilters = locationInput.trim() !== "";
-
-  const handleClearFilters = useCallback(() => {
-    setLocationInput("");
-  }, []);
+  const handleClearFilters = useCallback(() => { setLocationInput(""); }, []);
 
   return (
     <main className="min-h-screen bg-background" data-ocid="browse.page">
-      {/* Header / filter band */}
-      <section className="bg-card border-b border-border">
-        <div className="container mx-auto px-4 sm:px-6 py-8 sm:py-10">
+      <section className="relative bg-card border-b border-border/60 overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-br from-purple-500/3 via-transparent to-pink-500/3 pointer-events-none" />
+        <div className="absolute -top-20 -left-20 w-60 h-60 bg-purple-500/5 rounded-full blur-3xl pointer-events-none" />
+        <div className="relative container mx-auto px-4 sm:px-6 py-8 sm:py-10">
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-5">
-            <div>
-              <h1 className="font-display text-2xl sm:text-3xl font-bold text-foreground leading-tight">
-                Roommate Finder
-              </h1>
-              <p className="text-muted-foreground text-sm sm:text-base mt-1">
-                Find people looking for roommates or rooms in your area.
-              </p>
+            <div className="flex items-center gap-3">
+              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-purple-500/20 to-pink-500/20 text-purple-600">
+                <Users className="h-5 w-5" />
+              </div>
+              <div>
+                <h1 className="font-display text-2xl sm:text-3xl font-bold text-foreground leading-tight">Roommate Finder</h1>
+                <p className="text-muted-foreground text-sm sm:text-base mt-0.5">Find people looking for roommates or rooms in your area.</p>
+              </div>
             </div>
             <Link to="/post-listing">
-              <Button>Post for Roommates</Button>
+              <Button className="gap-2 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white shadow-md hover:shadow-lg transition-all duration-300">
+                <PlusCircle className="h-4 w-4" />Post for Roommates
+              </Button>
             </Link>
           </div>
 
-          {/* Controls row */}
           <div className="flex flex-col sm:flex-row gap-3 max-w-3xl">
-            {/* Location search */}
             <div className="relative flex-1">
-              <Search
-                className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none"
-                aria-hidden="true"
-              />
-              <Input
-                data-ocid="browse.location.search_input"
-                type="search"
-                placeholder="Search by city, area, or location…"
-                value={locationInput}
-                onChange={(e) => setLocationInput(e.target.value)}
-                className="pl-9 bg-background border-input focus-visible:ring-accent"
-                aria-label="Search by location"
-              />
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" aria-hidden="true" />
+              <Input data-ocid="browse.location.search_input" type="search" placeholder="Search by city, area, or location…" value={locationInput} onChange={(e) => setLocationInput(e.target.value)} className="pl-9 bg-background/80 backdrop-blur-sm border-input/60 focus-visible:ring-purple-500/50" aria-label="Search by location" />
             </div>
-
           </div>
         </div>
       </section>
 
-      {/* Results area */}
       <section className="container mx-auto px-4 sm:px-6 py-8">
-        {/* Meta row: count + clear */}
         <div className="flex items-center justify-between mb-6 min-h-6 gap-2">
           {!isLoading && !isError && listings !== undefined && (
             <p className="text-sm text-muted-foreground" aria-live="polite">
-              {listings.length === 0 ? (
-                "No results"
-              ) : (
-                <>
-                  <span className="font-semibold text-foreground">
-                    {listings.length}
-                  </span>{" "}
-                  {listings.length === 1 ? "listing" : "listings"} found
-                </>
-              )}
+              {listings.length === 0 ? "No results" : (<><span className="font-semibold text-foreground">{listings.length}</span>{" "}{listings.length === 1 ? "listing" : "listings"} found</>)}
             </p>
           )}
-
           {hasActiveFilters && (
-            <Button
-              type="button"
-              variant="ghost"
-              size="sm"
-              onClick={handleClearFilters}
-              data-ocid="browse.clear_filters.button"
-              className="ml-auto text-accent hover:text-accent/80 hover:bg-accent/10 px-2 h-7 text-xs"
-            >
-              Clear filters
-            </Button>
+            <Button type="button" variant="ghost" size="sm" onClick={handleClearFilters} data-ocid="browse.clear_filters.button" className="ml-auto text-accent hover:text-accent/80 hover:bg-accent/10 px-2 h-7 text-xs">Clear filters</Button>
           )}
         </div>
 
-        {/* Loading skeletons */}
-        {isLoading && (
-          <div
-            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5"
-            data-ocid="browse.loading_state"
-            aria-busy="true"
-            aria-label="Loading listings"
-          >
-            {Array.from({ length: 6 }).map((_, i) => (
-              // biome-ignore lint/suspicious/noArrayIndexKey: skeleton placeholders have no stable key
-              <ListingCardSkeleton key={i} />
-            ))}
-          </div>
-        )}
+        {isLoading && (<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5" data-ocid="browse.loading_state" aria-busy="true" aria-label="Loading listings">{Array.from({ length: 6 }).map((_, i) => (<ListingCardSkeleton key={i} />))}</div>)}
 
-        {/* Error state */}
         {isError && !isLoading && (
-          <div
-            className="flex flex-col items-center justify-center py-20 gap-3 text-center"
-            data-ocid="browse.error_state"
-            role="alert"
-          >
-            <div className="rounded-full bg-destructive/10 p-5">
-              <Building2
-                className="h-10 w-10 text-destructive/60"
-                aria-hidden="true"
-              />
-            </div>
-            <p className="text-muted-foreground text-sm">
-              Something went wrong loading listings. Please try again.
-            </p>
+          <div className="flex flex-col items-center justify-center py-20 gap-4 text-center" data-ocid="browse.error_state" role="alert">
+            <div className="rounded-2xl bg-destructive/10 p-5"><Building2 className="h-10 w-10 text-destructive/60" aria-hidden="true" /></div>
+            <p className="text-muted-foreground text-sm">Something went wrong loading listings. Please try again.</p>
           </div>
         )}
 
-        {/* Empty state */}
         {!isLoading && !isError && listings?.length === 0 && (
-          <div
-            className="flex flex-col items-center justify-center py-20 gap-4 text-center"
-            data-ocid="browse.empty_state"
-          >
-            <div className="rounded-full bg-muted p-5">
-              <Building2
-                className="h-10 w-10 text-muted-foreground/60"
-                aria-hidden="true"
-              />
-            </div>
+          <div className="flex flex-col items-center justify-center py-20 gap-5 text-center" data-ocid="browse.empty_state">
+            <div className="rounded-2xl bg-gradient-to-br from-purple-500/10 to-pink-500/10 p-5 shadow-inner"><Users className="h-10 w-10 text-purple-500/50" aria-hidden="true" /></div>
             <div className="flex flex-col gap-1">
-              <h2 className="font-display font-semibold text-foreground text-lg">
-                No listings found
-              </h2>
-              <p className="text-muted-foreground text-sm max-w-xs">
-                {hasActiveFilters
-                  ? "Try adjusting your location search or changing the category filter."
-                  : "No listings are available right now. Check back soon."}
-              </p>
+              <h2 className="font-display font-semibold text-foreground text-lg">No listings found</h2>
+              <p className="text-muted-foreground text-sm max-w-xs">{hasActiveFilters ? "Try adjusting your location search." : "No roommate listings are available right now. Check back soon."}</p>
             </div>
-            {hasActiveFilters && (
-              <Button
-                type="button"
-                variant="outline"
-                size="sm"
-                onClick={handleClearFilters}
-                data-ocid="browse.empty_state.clear_button"
-              >
-                Clear all filters
-              </Button>
-            )}
+            {hasActiveFilters && (<Button type="button" variant="outline" size="sm" onClick={handleClearFilters} data-ocid="browse.empty_state.clear_button">Clear all filters</Button>)}
           </div>
         )}
 
-        {/* Listings grid */}
         {!isLoading && !isError && listings && listings.length > 0 && (
-          <div
-            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5"
-            data-ocid="browse.list"
-          >
-            {listings.map((listing, index) => (
-              <ListingCard
-                key={listing.id.toString()}
-                listing={listing}
-                index={index}
-              />
-            ))}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5" data-ocid="browse.list">
+            {listings.map((listing, index) => (<ListingCard key={listing.id.toString()} listing={listing} index={index} />))}
           </div>
         )}
       </section>
