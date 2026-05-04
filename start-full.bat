@@ -41,7 +41,7 @@ timeout /t 8 /nobreak > nul
 
 :: Start Backend (uses default application.properties = PostgreSQL)
 echo   [2/3] Starting Backend (Spring Boot + PostgreSQL)...
-start "RentEase Backend" cmd /k "cd /d %~dp0java-backend && mvn spring-boot:run"
+start "RentEase Backend" cmd /k "cd /d %~dp0java-backend && call mvnw.cmd spring-boot:run"
 
 :: Wait for backend
 timeout /t 5 /nobreak > nul

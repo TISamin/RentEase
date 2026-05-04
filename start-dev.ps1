@@ -53,7 +53,7 @@ Write-Host "  [1/2] Starting Spring Boot backend..." -ForegroundColor Yellow
 $backendJob = Start-Job -ScriptBlock {
     param($root)
     Set-Location "$root\java-backend"
-    & mvn spring-boot:run "-Dspring-boot.run.profiles=dev" 2>&1
+    & .\mvnw.cmd spring-boot:run "-Dspring-boot.run.profiles=dev" 2>&1
 } -ArgumentList $projectRoot
 
 # Give backend a head start

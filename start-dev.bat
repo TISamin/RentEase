@@ -31,9 +31,17 @@ if not exist "%~dp0frontend\node_modules" (
     cd /d "%~dp0"
 )
 
+:: Detect Maven or use Wrapper
+set MVN_CMD=mvn
+where mvn >nul 2>nul
+if %ERRORLEVEL% NEQ 0 (
+    echo   [!] Maven not found in PATH. Using Maven Wrapper...
+    set MVN_CMD=mvnw.cmd
+)
+
 :: Start Backend in a new window
 echo   [1/2] Starting Backend (Spring Boot + H2)...
-start "RentEase Backend" cmd /k "cd /d %~dp0java-backend && mvn spring-boot:run -Dspring-boot.run.profiles=dev"
+start "RentEase Backend" cmd /k "cd /d %~dp0java-backend && call %MVN_CMD% spring-boot:run -Dspring-boot.run.profiles=dev"
 
 :: Wait a few seconds for backend to begin starting
 timeout /t 5 /nobreak > nul

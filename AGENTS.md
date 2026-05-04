@@ -15,8 +15,8 @@
 
 **Backend** (run from `java-backend/`):
 
-- **build**: `mvn clean install`
-- **run**: `mvn spring-boot:run`
+- **build**: `./mvnw.cmd clean install`
+- **run**: `./mvnw.cmd spring-boot:run`
 
 ## Learnings
 

@@ -131,11 +131,13 @@ if exist %WRAPPER_JAR% (
 
     powershell -Command "&{"^
 		"$webclient = new-object System.Net.WebClient;"^
-		"if (test-pathEnv:MVNW_USERNAME) {"^
+		"if (Test-Path Env:\MVNW_USERNAME) {"^
 		"  $webclient.Credentials = new-object System.Net.NetworkCredential($Env:MVNW_USERNAME, $Env:MVNW_PASSWORD);"^
 		"}"^
-		"$webclient.DownloadFile($WRAPPER_URL, %WRAPPER_JAR%)"^
+		"[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12;"^
+		"$webclient.DownloadFile('%WRAPPER_URL%', '%WRAPPER_JAR:~1,-1%')"^
 	"}"
+
     if "%MVNW_VERBOSE%" == "true" (
         echo Finished downloading %WRAPPER_JAR%
     )
@@ -144,7 +146,7 @@ if exist %WRAPPER_JAR% (
 @REM Provide a "standard" way to retrieve the CLI args that will work with both windows and non-windows execution.
 set MAVEN_CMD_LINE_ARGS=%*
 
-%JAVA_HOME%\bin\java.exe %MAVEN_OPTS% %MAVEN_DEBUG_OPTS% -classpath %WRAPPER_JAR% %WRAPPER_LAUNCHER% %MAVEN_CONFIG% %*
+"%JAVA_HOME%\bin\java.exe" %MAVEN_OPTS% %MAVEN_DEBUG_OPTS% -classpath %WRAPPER_JAR% %WRAPPER_LAUNCHER% %MAVEN_CONFIG% %*
 if ERRORLEVEL 1 goto error
 goto end
 
