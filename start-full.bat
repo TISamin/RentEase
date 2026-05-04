@@ -9,11 +9,25 @@ echo     Docker + PostgreSQL + Backend + Frontend
 echo   ========================================
 echo.
 
+:: Detect Package Manager
+set PKG_MGR=npm
+where pnpm >nul 2>nul
+if %ERRORLEVEL% EQU 0 (
+    set PKG_MGR=pnpm
+)
+
 :: Auto-install dependencies if node_modules is missing
 if not exist "%~dp0frontend\node_modules" (
-    echo   [!] node_modules not found. Installing dependencies...
+    echo   [!] node_modules not found. Installing dependencies with %PKG_MGR%...
     echo       This may take a minute...
-    cd /d "%~dp0frontend" && call npm install
+    cd /d "%~dp0frontend" && call %PKG_MGR% install
+    if %ERRORLEVEL% NEQ 0 (
+        echo.
+        echo   [X] ERROR: %PKG_MGR% install failed! 
+        echo       Please check your internet connection and make sure Node.js is installed.
+        pause
+        exit /b %ERRORLEVEL%
+    )
     cd /d "%~dp0"
 )
 

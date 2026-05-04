@@ -22,6 +22,32 @@ Write-Host ""
 
 $projectRoot = $PSScriptRoot
 
+# ── Dependency Check ─────────────────────────────────────
+if (-not (Test-Path "$projectRoot\frontend\node_modules")) {
+    Write-Host "  [!] node_modules not found. Installing dependencies..." -ForegroundColor Cyan
+    
+    $pkgMgr = "npm"
+    if (Get-Command pnpm -ErrorAction SilentlyContinue) {
+        $pkgMgr = "pnpm"
+    }
+    
+    Write-Host "      Using $pkgMgr to install. This may take a minute..." -ForegroundColor Gray
+    
+    Push-Location "$projectRoot\frontend"
+    try {
+        & $pkgMgr install
+        if ($LASTEXITCODE -ne 0) {
+            Write-Host "  ❌ ERROR: $pkgMgr install failed!" -ForegroundColor Red
+            Pop-Location
+            Pause
+            exit $LASTEXITCODE
+        }
+    } finally {
+        Pop-Location
+    }
+    Write-Host "  ✅ Dependencies installed successfully.`n" -ForegroundColor Green
+}
+
 # ── Start Backend ────────────────────────────────────────
 Write-Host "  [1/2] Starting Spring Boot backend..." -ForegroundColor Yellow
 $backendJob = Start-Job -ScriptBlock {
