@@ -29,6 +29,7 @@ import { useRef, useState } from "react";
 import { toast } from "sonner";
 import { useCreateListing } from "../hooks/useBackend";
 import { ALL_CATEGORIES, CATEGORY_LABELS, Category } from "../types";
+import { MapLocationPicker } from "../components/MapLocationPicker";
 
 interface UploadedImage {
   id: string;
@@ -354,27 +355,39 @@ export default function PostListing() {
                 errorId="location-error"
                 icon={MapPin}
               >
-                <Input
-                  id="listing-location"
-                  placeholder="e.g. Gulshan-2, Dhaka"
-                  value={location}
-                  onChange={(e) => {
-                    setLocation(e.target.value);
-                    if (errors.location) clearFieldError("location");
-                  }}
-                  onBlur={() =>
-                    !location.trim() &&
-                    setErrors((er) => ({
-                      ...er,
-                      location: "Location is required",
-                    }))
-                  }
-                  aria-invalid={!!errors.location}
-                  aria-describedby={
-                    errors.location ? "location-error" : undefined
-                  }
-                  data-ocid="post_listing.location.input"
-                />
+                <div className="flex gap-2 items-start">
+                  <div className="flex-1">
+                    <Input
+                      id="listing-location"
+                      placeholder="e.g. Gulshan-2, Dhaka"
+                      value={location}
+                      onChange={(e) => {
+                        setLocation(e.target.value);
+                        if (errors.location) clearFieldError("location");
+                      }}
+                      onBlur={() =>
+                        !location.trim() &&
+                        setErrors((er) => ({
+                          ...er,
+                          location: "Location is required",
+                        }))
+                      }
+                      aria-invalid={!!errors.location}
+                      aria-describedby={
+                        errors.location ? "location-error" : undefined
+                      }
+                      data-ocid="post_listing.location.input"
+                    />
+                  </div>
+                  {!isRoommateFinder && (
+                    <MapLocationPicker 
+                      onLocationSelect={(loc) => {
+                        setLocation(loc);
+                        if (errors.location) clearFieldError("location");
+                      }} 
+                    />
+                  )}
+                </div>
               </FieldWrapper>
 
               {/* Description */}

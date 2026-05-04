@@ -19,7 +19,7 @@ if not exist "%~dp0frontend\node_modules" (
 
 :: Start Backend in a new window
 echo   [1/2] Starting Backend (Spring Boot + H2)...
-start "RentEase Backend" cmd /k "cd /d %~dp0java-backend && mvnw.cmd spring-boot:run -Dspring-boot.run.profiles=dev"
+start "RentEase Backend" cmd /k "cd /d %~dp0java-backend && mvn spring-boot:run -Dspring-boot.run.profiles=dev"
 
 :: Wait a few seconds for backend to begin starting
 timeout /t 5 /nobreak > nul
