@@ -1,5 +1,7 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
+import { API_BASE_URL } from "../config";
+
 
 interface AuthState {
   isAuthenticated: boolean;
@@ -31,7 +33,8 @@ export const useAuthStore = create<AuthState>()(
       sendOtp: async (email: string) => {
         set({ isLoading: true });
         try {
-          const res = await fetch("http://localhost:8080/api/auth/send-otp", {
+          const res = await fetch(`${API_BASE_URL}/auth/send-otp`, {
+
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ email }),
@@ -47,7 +50,8 @@ export const useAuthStore = create<AuthState>()(
         set({ isLoading: true });
         
         try {
-          const res = await fetch("http://localhost:8080/api/auth/verify-otp", {
+          const res = await fetch(`${API_BASE_URL}/auth/verify-otp`, {
+
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ email, otp }),
@@ -63,7 +67,8 @@ export const useAuthStore = create<AuthState>()(
       setPassword: async (email: string, password: string) => {
         set({ isLoading: true, loginStatus: "logging-in" });
         try {
-          const res = await fetch("http://localhost:8080/api/auth/set-password", {
+          const res = await fetch(`${API_BASE_URL}/auth/set-password`, {
+
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ email, password }),
@@ -90,7 +95,8 @@ export const useAuthStore = create<AuthState>()(
       loginWithPassword: async (email: string, password: string) => {
         set({ isLoading: true, loginStatus: "logging-in" });
         try {
-          const res = await fetch("http://localhost:8080/api/auth/login", {
+          const res = await fetch(`${API_BASE_URL}/auth/login`, {
+
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ email, password }),

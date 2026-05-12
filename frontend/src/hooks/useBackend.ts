@@ -3,7 +3,8 @@ import { useAuthStore } from "./useAuth";
 import type { BrowseFilter, ListingPublic, UserProfile, ListingId } from "../types";
 
 // Change this to match your Spring Boot backend port
-const API_BASE_URL = "http://localhost:8080/api";
+import { API_BASE_URL } from "../config";
+
 
 async function fetchWithAuth(endpoint: string, options: RequestInit = {}) {
   const token = useAuthStore.getState().token;
