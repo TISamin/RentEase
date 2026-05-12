@@ -12,6 +12,7 @@ public class EmailService {
     private JavaMailSender mailSender;
 
     public void sendOtpEmail(String toEmail, String otp) {
+        System.out.println("Attempting to send OTP email to: " + toEmail);
         SimpleMailMessage message = new SimpleMailMessage();
         message.setTo(toEmail);
         message.setSubject("Your RentEase Verification Code");
