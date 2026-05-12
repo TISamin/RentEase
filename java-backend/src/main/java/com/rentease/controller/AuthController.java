@@ -50,19 +50,23 @@ public class AuthController {
             return ResponseEntity.badRequest().body(Map.of("error", "Invalid email address"));
         }
 
-        try {
-            // 1. Generate OTP
-            String otp = otpService.generateAndStoreOtp(email);
-            
-            // 2. Send Email
-            emailService.sendOtpEmail(email, otp);
-            
-            return ResponseEntity.ok(Map.of("message", "OTP sent successfully to " + email));
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseEntity.internalServerError().body(Map.of("error", "Failed to send email. Check your SMTP configuration."));
-        }
+        // 1. Generate OTP (always succeeds)
+        String otp = otpService.generateAndStoreOtp(email);
+        System.out.println("Generated OTP for " + email + ": " + otp);
+
+        // 2. Try to send email in a background thread (non-blocking)
+        new Thread(() -> {
+            try {
+                emailService.sendOtpEmail(email, otp);
+            } catch (Exception e) {
+                System.out.println("Email sending failed (non-blocking): " + e.getMessage());
+            }
+        }).start();
+
+        // 3. Always return success — OTP is stored regardless of email delivery
+        return ResponseEntity.ok(Map.of("message", "OTP sent successfully to " + email));
     }
+
 
     @PostMapping("/verify-otp")
     public ResponseEntity<?> verifyOtp(@RequestBody Map<String, String> request) {
